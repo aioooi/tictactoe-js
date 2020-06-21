@@ -104,7 +104,7 @@ class Game {
 
   // helpers
   _randInt(max) {
-    return Math.floor(Math.random() * max);
+    return Math.floor(0.99999 * Math.random() * max);
   }
 
   // indices of state.flat() where === EMPTY
