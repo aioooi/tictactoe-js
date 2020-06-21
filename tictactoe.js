@@ -84,8 +84,14 @@ class Game {
   // strategies
   _randomField() {
     const e = this._empty();
-    let x = e[this._randInt(e.length)];
-    this._playField(Math.floor(x / 3), x % 3, COMPUTER);
+    if (e.length) {
+      let x = e[this._randInt(e.length)];
+      this._playField(Math.floor(x / 3), x % 3, COMPUTER);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 
