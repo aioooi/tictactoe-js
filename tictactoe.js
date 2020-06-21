@@ -46,37 +46,40 @@ class Game {
 
     // make move
     let action = [
+      () => this._win(),
+      () => this._avoidDefeat(),
+      () => this._matchball(),
       () => this._center(),
       () => this._oppositeCorner(),
       () => this._emptyCorner(),
       () => this._randomField()
     ]
-
+    
     while (action.length) {
       if (action.shift()()) {
         break;
       }
     }
-
+    
     console.log(this.state)
-
+    
     return this.gameFinished;
   }
-
+  
   get getWinner() {
-
+    
   }
-
+  
   get getWinningLine() {
-
+    
   }
-
+  
   get gameFinished() {
     return false;
     // check board whether board complete
     // determine winner
   }
-
+  
   // field status, TODO do I need those methods?
   isEmpty(i, j) {
     return this.state[i][j] === EMPTY ? true : false;
@@ -85,13 +88,25 @@ class Game {
   isHuman(i, j) {
     return this.state[i][j] === HUMAN ? true : false;
   }
-
+  
   isComputer(i, j) {
     return this.state[i][j] === COMPUTER ? true : false;
   }
-
-
+  
+  
   // strategies
+  _win() {
+
+  }
+  
+  _avoidDefeat() {
+
+  }
+
+  _matchball() {
+
+  }
+
   _center() {
     console.log("play center");
     if (this.state[1][1] === EMPTY) {
