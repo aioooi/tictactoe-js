@@ -8,10 +8,10 @@ const COMPUTER = -1;
 const MAX_HANDICAP = 100;
 
 class Game {
-  constructor(handicap, firstMove = HUMAN) {
+  constructor(handicap, humanBegins=true) {
     this.handicap = (0 <= handicap < MAX_HANDICAP) ? handicap : 10;
 
-    this.turn = firstMove !== HUMAN ? COMPUTER : firstMove;
+    this.turn = humanBegins ? HUMAN : COMPUTER;
 
     this.state = [
       [EMPTY, EMPTY, EMPTY],
