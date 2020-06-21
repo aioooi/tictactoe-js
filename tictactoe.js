@@ -8,7 +8,7 @@ const COMPUTER = -1;
 const MAX_HANDICAP = 100;
 
 class Game {
-  constructor(handicap, humanBegins=true) {
+  constructor(handicap, humanBegins = true) {
     this.handicap = (0 <= handicap < MAX_HANDICAP) ? handicap : 10;
 
     this.turn = humanBegins ? HUMAN : COMPUTER;
@@ -32,17 +32,21 @@ class Game {
 
     this.state[i][j] = HUMAN;
     this.turn = COMPUTER;
-    return this.gameFinished();
+    console.log("human move done");
+    return this.gameFinished;
   }
 
   makeMove() {
     if (this.turn !== COMPUTER) {
       throw Error("it's not my turn!")
     }
+    this.turn = HUMAN;
+
+    console.log("computer moves");
 
     // make move
     let action = [
-      this._randomField,
+      () => this._randomField(),
     ]
 
     while (action.length) {
@@ -51,7 +55,9 @@ class Game {
       }
     }
 
-    return this.gameFinished();
+    console.log(this.state)
+
+    return this.gameFinished;
   }
 
   get getWinner() {
@@ -63,6 +69,7 @@ class Game {
   }
 
   get gameFinished() {
+    return false;
     // check board whether board complete
     // determine winner
   }
@@ -86,7 +93,7 @@ class Game {
     const e = this._empty();
     if (e.length) {
       let x = e[this._randInt(e.length)];
-      this._playField(Math.floor(x / 3), x % 3, COMPUTER);
+      this.state[Math.floor(x / 3)][x % 3] = COMPUTER;
       return true;
     }
     else {
