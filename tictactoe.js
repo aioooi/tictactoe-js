@@ -1,10 +1,17 @@
+// constants
+
+// field values
 const EMPTY = 0;
 const HUMAN = 1;
 const COMPUTER = -1;
 
+const MAX_HANDICAP = 100;
+
 class Game {
-  constructor(handicap) {
-    this.handicap = handicap;
+  constructor(handicap, firstMove = HUMAN) {
+    this.handicap = (0 <= handicap < MAX_HANDICAP) ? handicap : 10;
+
+    this.turn = firstMove !== HUMAN ? COMPUTER : firstMove;
 
     this.state = [
       [EMPTY, EMPTY, EMPTY],
@@ -13,7 +20,54 @@ class Game {
     ]
   }
 
-  // field status
+
+  playerMove(i, j) {
+    if (this.turn !== HUMAN) {
+      throw Error("it's not your turn!")
+    }
+
+    if (this.state[i][j] !== EMPTY) {
+      throw Error("field not empty!");
+    }
+
+    this.state[i][j] = HUMAN;
+    this.turn = COMPUTER;
+    return this.gameFinished();
+  }
+
+  makeMove() {
+    if (this.turn !== COMPUTER) {
+      throw Error("it's not my turn!")
+    }
+
+    // make move
+    let action = [
+      this._randomField,
+    ]
+
+    while (action.length) {
+      if (action.pop()()) {
+        break;
+      }
+    }
+
+    return this.gameFinished();
+  }
+
+  get getWinner() {
+
+  }
+
+  get getWinningLine() {
+
+  }
+
+  get gameFinished() {
+    // check board whether board complete
+    // determine winner
+  }
+
+  // field status, TODO do I need those methods?
   isEmpty(i, j) {
     return this.state[i][j] === EMPTY ? true : false;
   }
@@ -26,9 +80,18 @@ class Game {
     return this.state[i][j] === COMPUTER ? true : false;
   }
 
-  humanMove(i, j) {
-    this.state[i][j] = HUMAN;
-    console.log(this.state);
+
+  // strategies
+  _randomField() {
+    const e = this._empty();
+    let x = e[this._randInt(e.length)];
+    this._playField(Math.floor(x / 3), x % 3, COMPUTER);
+  }
+
+
+  // helpers
+  _randInt(max) {
+    return Math.floor(Math.random() * max);
   }
 
   // indices of state.flat() where === EMPTY
@@ -40,23 +103,6 @@ class Game {
       }
     });
     return e;
-  }
-
-  _playField(i, j, player=HUMAN) {
-    this.state[i][j] = player;
-    console.log(this.state);
-  }
-
-  // strategies:
-  _randomField() {
-    const e = this._empty();
-    let x = e[this._randInt(e.length)];
-    this._playField(Math.floor(x / 3), x % 3, COMPUTER);
-  }
-
-  // helper
-  _randInt(max) {
-    return Math.floor(Math.random() * max);
   }
 }
 
