@@ -46,6 +46,7 @@ class Game {
 
     // make move
     let action = [
+      () => this._oppositeCorner(),
       () => this._emptyCorner(),
       () => this._randomField(),
     ]
@@ -90,15 +91,41 @@ class Game {
 
 
   // strategies
+  _oppositeCorner() {
+    const s = this.state.flat()
+
+    if (s[0] + s[8] === HUMAN) {
+      if (this.state[0][0] === EMPTY) {
+        this.state[0][0] = COMPUTER;
+      }
+      else {
+        this.state[2][2] = COMPUTER;
+      }
+      return true;
+    }
+    else if (s[2] + s[6] === HUMAN) {
+      if (this.state[0][2] === EMPTY) {
+        this.state[0][2] = COMPUTER;
+      }
+      else {
+        this.state[2][0] = COMPUTER;
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  
   _emptyCorner() {
-    const corner = [[0, 0], [0, 2], [2, 0], [2, 2]];
-    const empty = this._where([0, 2, 6, 8].map(v => this.state.flat()[v]), EMPTY);
+    const c = [[0, 0], [0, 2], [2, 0], [2, 2]];
+    const e = this._where([0, 2, 6, 8].map(v => this.state.flat()[v]), EMPTY);
     
-    if (empty.length) {
+    if (e.length) {
       console.log("play empty corner");
       
-      let i = this._randInt(empty.length);
-      this.state[corner[empty[i]][0]][corner[empty[i]][1]] = COMPUTER;
+      let i = this._randInt(e.length);
+      this.state[c[e[i]][0]][c[e[i]][1]] = COMPUTER;
       return true;
     }
     else {
