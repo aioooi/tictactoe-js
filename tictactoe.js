@@ -46,11 +46,12 @@ class Game {
 
     // make move
     let action = [
+      () => this._emptyCorner(),
       () => this._randomField(),
     ]
 
     while (action.length) {
-      if (action.pop()()) {
+      if (action.shift()()) {
         break;
       }
     }
@@ -90,14 +91,26 @@ class Game {
 
   // strategies
   _emptyCorner() {
-    // corner = [0, 2, 6, 8];
-    let corner = [[0, 0], [0, 2], [2, 0], [2, 2]];
-    let empty = 0;
+    const corner = [[0, 0], [0, 2], [2, 0], [2, 2]];
+    const empty = this._where([0, 2, 6, 8].map(v => this.state.flat()[v]), EMPTY);
+    
+    if (empty.length) {
+      console.log("play empty corner");
+      
+      let i = this._randInt(empty.length);
+      this.state[corner[empty[i]][0]][corner[empty[i]][1]] = COMPUTER;
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-
+  
   _randomField() {
     const e = this._where(this.state.flat(), EMPTY);
     if (e.length) {
+      console.log("play random field");
+
       let x = e[this._randInt(e.length)];
       this.state[Math.floor(x / 3)][x % 3] = COMPUTER;
       return true;
