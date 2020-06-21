@@ -46,9 +46,10 @@ class Game {
 
     // make move
     let action = [
+      () => this._center(),
       () => this._oppositeCorner(),
       () => this._emptyCorner(),
-      () => this._randomField(),
+      () => this._randomField()
     ]
 
     while (action.length) {
@@ -91,10 +92,22 @@ class Game {
 
 
   // strategies
+  _center() {
+    console.log("play center");
+    if (this.state[1][1] === EMPTY) {
+      this.state[1][1] = COMPUTER;
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  
   _oppositeCorner() {
     const s = this.state.flat()
-
+    
     if (s[0] + s[8] === HUMAN) {
+      console.log("play opposite corner");
       if (this.state[0][0] === EMPTY) {
         this.state[0][0] = COMPUTER;
       }
@@ -104,6 +117,7 @@ class Game {
       return true;
     }
     else if (s[2] + s[6] === HUMAN) {
+      console.log("play opposite corner");
       if (this.state[0][2] === EMPTY) {
         this.state[0][2] = COMPUTER;
       }
