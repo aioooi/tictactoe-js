@@ -89,8 +89,14 @@ class Game {
 
 
   // strategies
+  _emptyCorner() {
+    // corner = [0, 2, 6, 8];
+    let corner = [[0, 0], [0, 2], [2, 0], [2, 2]];
+    let empty = 0;
+  }
+
   _randomField() {
-    const e = this._empty();
+    const e = this._where(this.state.flat(), EMPTY);
     if (e.length) {
       let x = e[this._randInt(e.length)];
       this.state[Math.floor(x / 3)][x % 3] = COMPUTER;
@@ -107,11 +113,10 @@ class Game {
     return Math.floor(0.99999 * Math.random() * max);
   }
 
-  // indices of state.flat() where === EMPTY
-  _empty() {
+  _where(array, value) {
     let e = [];
-    this.state.flat().forEach((v, i) => {
-      if (v === EMPTY) {
+    array.forEach((v, i) => {
+      if (v === value) {
         e.push(i);
       }
     });
