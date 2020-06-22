@@ -54,32 +54,32 @@ class Game {
       () => this._emptyCorner(),
       () => this._randomField()
     ]
-    
+
     while (action.length) {
       if (action.shift()()) {
         break;
       }
     }
-    
+
     console.log(this.state)
-    
+
     return this.gameFinished;
   }
-  
+
   get getWinner() {
-    
+
   }
-  
+
   get getWinningLine() {
-    
+
   }
-  
+
   get gameFinished() {
     return false;
     // check board whether board complete
     // determine winner
   }
-  
+
   // field status, TODO do I need those methods?
   isEmpty(i, j) {
     return this.state[i][j] === EMPTY ? true : false;
@@ -88,23 +88,61 @@ class Game {
   isHuman(i, j) {
     return this.state[i][j] === HUMAN ? true : false;
   }
-  
+
   isComputer(i, j) {
     return this.state[i][j] === COMPUTER ? true : false;
   }
-  
-  
+
+
   // strategies
   _win() {
-
+    return false;
   }
-  
+
   _avoidDefeat() {
 
+    return false;
   }
 
   _matchball() {
+    console.log("matchball");
 
+    let rows = this._where(this.state.map(v => v.reduce((x, y) => x + y)),
+      COMPUTER);
+    this._shuffle(rows);
+    console.log(rows);
+
+    for (let r = 0; r < rows.length; r++) {
+      const i = rows[r];
+      const empty = this._where(this.state[i], EMPTY);
+      if (empty.length) {
+        console.log("create matchball: find empty field in row");
+        const j = empty[this._randInt(empty.length)];
+        this.state[i][j] = COMPUTER;
+        return true;
+      }
+    }
+
+    let cols = this._where(
+      [0, 1, 2].map(j => [0, 1, 2].map(i => this.state[i][j]).reduce((x, y) =>
+        x + y)), 
+        COMPUTER);
+    this._shuffle(cols);
+
+    console.log(cols);
+
+    for (let c = 0; c < cols.length; c++) {
+      let j = cols[c];
+      const empty = this._where([0, 1, 2].map(i => this.state[i][j]), EMPTY);
+      if (empty.length) {
+        console.log("create matchball: find empty field in column");
+        const i = empty[this._randInt(empty.length)];
+        this.state[i][j] = COMPUTER;
+        return true;
+      }
+    }
+
+    return false;
   }
 
   _center() {
@@ -117,10 +155,10 @@ class Game {
       return false;
     }
   }
-  
+
   _oppositeCorner() {
     const s = this.state.flat()
-    
+
     if (s[0] + s[8] === HUMAN) {
       console.log("play opposite corner");
       if (this.state[0][0] === EMPTY) {
@@ -145,14 +183,14 @@ class Game {
       return false;
     }
   }
-  
+
   _emptyCorner() {
     const c = [[0, 0], [0, 2], [2, 0], [2, 2]];
     const e = this._where([0, 2, 6, 8].map(v => this.state.flat()[v]), EMPTY);
-    
+
     if (e.length) {
       console.log("play empty corner");
-      
+
       let i = this._randInt(e.length);
       this.state[c[e[i]][0]][c[e[i]][1]] = COMPUTER;
       return true;
@@ -161,7 +199,7 @@ class Game {
       return false;
     }
   }
-  
+
   _randomField() {
     const e = this._where(this.state.flat(), EMPTY);
     if (e.length) {
@@ -190,6 +228,14 @@ class Game {
       }
     });
     return e;
+  }
+
+  _shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 }
 
