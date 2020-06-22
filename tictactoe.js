@@ -44,7 +44,7 @@ class Game {
     console.log("computer moves");
 
     if (this._randInt(MAX_HANDICAP) < this.handicap) {
-      this._randomField();
+      this._randomMove();
     } else {
       let action = [
         () => this._win(),
@@ -53,7 +53,7 @@ class Game {
         () => this._center(),
         () => this._oppositeCorner(),
         () => this._emptyCorner(),
-        () => this._randomField(),
+        () => this._randomMove(),
       ];
 
       while (action.length) {
@@ -62,7 +62,7 @@ class Game {
         }
       }
     }
-    
+
     console.log(this.state);
 
     return this.gameFinished;
@@ -281,7 +281,7 @@ class Game {
     }
   }
 
-  _randomField() {
+  _randomMove() {
     const e = this._where(this.state.flat(), EMPTY);
     if (e.length) {
       console.log("play random field");
