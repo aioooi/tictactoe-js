@@ -9,7 +9,7 @@ const MAX_HANDICAP = 100;
 
 class Game {
   constructor(handicap, humanBegins = true) {
-    this.handicap = 0 <= handicap < MAX_HANDICAP ? handicap : 10;
+    this.handicap = 0 <= handicap && handicap < MAX_HANDICAP ? handicap : 10;
 
     this.turn = humanBegins ? HUMAN : COMPUTER;
 
