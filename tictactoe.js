@@ -94,7 +94,47 @@ class Game {
   }
 
   _avoidDefeat() {
-    return false;
+    console.log("avoid defeat");
+
+    const check = this._checkTriplet(2 * HUMAN);
+
+    if (check.length) {
+      const c = check[this._randInt(check.length)];
+
+      if (0 <= c && c < 3) {
+        // row
+        const j = this._where(this.state[c], EMPTY)[0];
+        this.state[c][j] = COMPUTER;
+      } else if (3 <= c && c < 6) {
+        // col
+        const j = c - 3;
+        console.log([0, 1, 2].map((i) => this.state[i][j]));
+        const i = this._where(
+          [0, 1, 2].map((i) => this.state[i][j]),
+          EMPTY
+        )[0];
+        this.state[i][j] = COMPUTER;
+      } else if (c === 6) {
+        const s = this.state.flat();
+        const x = this._where(
+          [0, 4, 8].map((i) => s[i]),
+          EMPTY
+        )[0];
+        this.state[x][x] = COMPUTER;
+      } else {
+        // secondary diagonal
+        const s = this.state.flat();
+        const x = this._where(
+          [6, 4, 2].map((i) => s[i]),
+          EMPTY
+        )[0];
+        this.state[2 - x][x] = COMPUTER;
+      }
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   _matchball() {
