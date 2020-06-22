@@ -65,14 +65,49 @@ class Game {
     return this.gameFinished;
   }
 
-  get getWinner() {}
+  get getWinner() {
+    return this.winner;
+  }
 
-  get getWinningLine() {}
+  get getWinningLine() {
+    return this.winningLine;
+  }
 
   get gameFinished() {
-    return false;
-    // check board whether board complete
-    // determine winner
+    const check = [
+      this._checkTriplet(3 * COMPUTER),
+      this._checkTriplet(3 * HUMAN),
+      this._where(this.state.flat(), EMPTY).length === 0,
+    ];
+
+    const winningLine = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [6, 4, 2],
+    ];
+
+    if (check[0].length) {
+      console.log("computer wins");
+      this.winner = COMPUTER;
+      this.winningLine = winningLine[check[0][0]];
+      return true;
+    } else if (check[1].length) {
+      console.log("human wins");
+      this.winner = HUMAN;
+      this.winningLine = winningLine[check[1][0]];
+      return true;
+    } else if (check[2] && !(check[0].length || check[1].length)) {
+      console.log("that's a draw");
+      this.winner = EMPTY;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // field status, TODO do I need those methods?
