@@ -90,13 +90,15 @@ class Game {
 
   // strategies
   _win() {
-    return false;
+    return this._fillTriplet(2 * COMPUTER, "win");
   }
 
   _avoidDefeat() {
-    console.log("avoid defeat");
+    return this._fillTriplet(2 * HUMAN, "avoid defeat");
+  }
 
-    const check = this._checkTriplet(2 * HUMAN);
+  _fillTriplet(check_value, message) {
+    const check = this._checkTriplet(check_value);
 
     if (check.length) {
       const c = check[this._randInt(check.length)];
@@ -131,6 +133,7 @@ class Game {
         this.state[2 - x][x] = COMPUTER;
       }
 
+      console.log(message);
       return true;
     } else {
       return false;
