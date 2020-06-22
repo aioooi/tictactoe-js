@@ -43,23 +43,26 @@ class Game {
 
     console.log("computer moves");
 
-    // make move
-    let action = [
-      () => this._win(),
-      () => this._avoidDefeat(),
-      () => this._matchball(),
-      () => this._center(),
-      () => this._oppositeCorner(),
-      () => this._emptyCorner(),
-      () => this._randomField(),
-    ];
+    if (this._randInt(MAX_HANDICAP) < this.handicap) {
+      this._randomField();
+    } else {
+      let action = [
+        () => this._win(),
+        () => this._avoidDefeat(),
+        () => this._matchball(),
+        () => this._center(),
+        () => this._oppositeCorner(),
+        () => this._emptyCorner(),
+        () => this._randomField(),
+      ];
 
-    while (action.length) {
-      if (action.shift()()) {
-        break;
+      while (action.length) {
+        if (action.shift()()) {
+          break;
+        }
       }
     }
-
+    
     console.log(this.state);
 
     return this.gameFinished;
