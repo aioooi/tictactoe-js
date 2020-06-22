@@ -2,16 +2,16 @@
 
 // field values
 const EMPTY = 0;
-const HUMAN = 1;
+const PLAYER = 1;
 const COMPUTER = -1;
 
 const MAX_HANDICAP = 100;
 
 class Game {
-  constructor(handicap, humanBegins = true) {
+  constructor(handicap, playerBegins = true) {
     this.handicap = 0 <= handicap && handicap < MAX_HANDICAP ? handicap : 10;
 
-    this.turn = humanBegins ? HUMAN : COMPUTER;
+    this.turn = playerBegins ? PLAYER : COMPUTER;
 
     this.state = [
       [EMPTY, EMPTY, EMPTY],
@@ -21,7 +21,7 @@ class Game {
   }
 
   playerMove(i, j) {
-    if (this.turn !== HUMAN) {
+    if (this.turn !== PLAYER) {
       throw Error("it's not your turn!");
     }
 
@@ -29,9 +29,9 @@ class Game {
       throw Error("field not empty!");
     }
 
-    this.state[i][j] = HUMAN;
+    this.state[i][j] = PLAYER;
     this.turn = COMPUTER;
-    console.log("human move done");
+    console.log("player move done");
     return this.gameFinished;
   }
 
@@ -39,7 +39,7 @@ class Game {
     if (this.turn !== COMPUTER) {
       throw Error("it's not my turn!");
     }
-    this.turn = HUMAN;
+    this.turn = PLAYER;
 
     console.log("computer moves");
 
@@ -79,7 +79,7 @@ class Game {
   get gameFinished() {
     const check = [
       this._checkTriplet(3 * COMPUTER),
-      this._checkTriplet(3 * HUMAN),
+      this._checkTriplet(3 * PLAYER),
       this._where(this.state.flat(), EMPTY).length === 0,
     ];
 
@@ -100,8 +100,8 @@ class Game {
       this.winningLine = winningLine[check[0][0]];
       return true;
     } else if (check[1].length) {
-      console.log("human wins");
-      this.winner = HUMAN;
+      console.log("player wins");
+      this.winner = PLAYER;
       this.winningLine = winningLine[check[1][0]];
       return true;
     } else if (check[2] && !(check[0].length || check[1].length)) {
@@ -113,26 +113,13 @@ class Game {
     }
   }
 
-  // field status, TODO do I need those methods?
-  isEmpty(i, j) {
-    return this.state[i][j] === EMPTY ? true : false;
-  }
-
-  isHuman(i, j) {
-    return this.state[i][j] === HUMAN ? true : false;
-  }
-
-  isComputer(i, j) {
-    return this.state[i][j] === COMPUTER ? true : false;
-  }
-
   // strategies
   _win() {
     return this._fillTriplet(2 * COMPUTER, "win");
   }
 
   _avoidDefeat() {
-    return this._fillTriplet(2 * HUMAN, "avoid defeat");
+    return this._fillTriplet(2 * PLAYER, "avoid defeat");
   }
 
   _fillTriplet(check_value, message) {
@@ -237,7 +224,7 @@ class Game {
   _oppositeCorner() {
     const s = this.state.flat();
 
-    if (s[0] + s[8] === HUMAN) {
+    if (s[0] + s[8] === PLAYER) {
       console.log("play opposite corner");
       if (this.state[0][0] === EMPTY) {
         this.state[0][0] = COMPUTER;
@@ -245,7 +232,7 @@ class Game {
         this.state[2][2] = COMPUTER;
       }
       return true;
-    } else if (s[2] + s[6] === HUMAN) {
+    } else if (s[2] + s[6] === PLAYER) {
       console.log("play opposite corner");
       if (this.state[0][2] === EMPTY) {
         this.state[0][2] = COMPUTER;
@@ -333,4 +320,4 @@ class Game {
   }
 }
 
-export { EMPTY, HUMAN, COMPUTER, Game };
+export { EMPTY, PLAYER, COMPUTER, Game };
