@@ -141,8 +141,6 @@ class Game {
   }
 
   _matchball() {
-    console.log("matchball");
-
     const acc = (x, y) => x + y;
 
     let rows = this._where(
@@ -189,8 +187,8 @@ class Game {
   }
 
   _center() {
-    console.log("play center");
     if (this.state[1][1] === EMPTY) {
+      console.log("play center");
       this.state[1][1] = COMPUTER;
       return true;
     } else {
