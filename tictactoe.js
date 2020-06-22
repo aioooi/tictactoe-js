@@ -9,21 +9,20 @@ const MAX_HANDICAP = 100;
 
 class Game {
   constructor(handicap, humanBegins = true) {
-    this.handicap = (0 <= handicap < MAX_HANDICAP) ? handicap : 10;
+    this.handicap = 0 <= handicap < MAX_HANDICAP ? handicap : 10;
 
     this.turn = humanBegins ? HUMAN : COMPUTER;
 
     this.state = [
       [EMPTY, EMPTY, EMPTY],
       [EMPTY, EMPTY, EMPTY],
-      [EMPTY, EMPTY, EMPTY]
-    ]
+      [EMPTY, EMPTY, EMPTY],
+    ];
   }
-
 
   playerMove(i, j) {
     if (this.turn !== HUMAN) {
-      throw Error("it's not your turn!")
+      throw Error("it's not your turn!");
     }
 
     if (this.state[i][j] !== EMPTY) {
@@ -38,7 +37,7 @@ class Game {
 
   makeMove() {
     if (this.turn !== COMPUTER) {
-      throw Error("it's not my turn!")
+      throw Error("it's not my turn!");
     }
     this.turn = HUMAN;
 
@@ -52,8 +51,8 @@ class Game {
       () => this._center(),
       () => this._oppositeCorner(),
       () => this._emptyCorner(),
-      () => this._randomField()
-    ]
+      () => this._randomField(),
+    ];
 
     while (action.length) {
       if (action.shift()()) {
@@ -61,18 +60,14 @@ class Game {
       }
     }
 
-    console.log(this.state)
+    console.log(this.state);
 
     return this.gameFinished;
   }
 
-  get getWinner() {
+  get getWinner() {}
 
-  }
-
-  get getWinningLine() {
-
-  }
+  get getWinningLine() {}
 
   get gameFinished() {
     return false;
@@ -93,22 +88,24 @@ class Game {
     return this.state[i][j] === COMPUTER ? true : false;
   }
 
-
   // strategies
   _win() {
     return false;
   }
 
   _avoidDefeat() {
-
     return false;
   }
 
   _matchball() {
     console.log("matchball");
 
-    let rows = this._where(this.state.map(v => v.reduce((x, y) => x + y)),
-      COMPUTER);
+    const acc = (x, y) => x + y;
+
+    let rows = this._where(
+      this.state.map((v) => v.reduce(acc)),
+      COMPUTER
+    );
     this._shuffle(rows);
     console.log(rows);
 
@@ -124,16 +121,19 @@ class Game {
     }
 
     let cols = this._where(
-      [0, 1, 2].map(j => [0, 1, 2].map(i => this.state[i][j]).reduce((x, y) =>
-        x + y)), 
-        COMPUTER);
+      [0, 1, 2].map((j) => [0, 1, 2].map((i) => this.state[i][j]).reduce(acc)),
+      COMPUTER
+    );
     this._shuffle(cols);
 
     console.log(cols);
 
     for (let c = 0; c < cols.length; c++) {
       let j = cols[c];
-      const empty = this._where([0, 1, 2].map(i => this.state[i][j]), EMPTY);
+      const empty = this._where(
+        [0, 1, 2].map((i) => this.state[i][j]),
+        EMPTY
+      );
       if (empty.length) {
         console.log("create matchball: find empty field in column");
         const i = empty[this._randInt(empty.length)];
@@ -150,43 +150,46 @@ class Game {
     if (this.state[1][1] === EMPTY) {
       this.state[1][1] = COMPUTER;
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   _oppositeCorner() {
-    const s = this.state.flat()
+    const s = this.state.flat();
 
     if (s[0] + s[8] === HUMAN) {
       console.log("play opposite corner");
       if (this.state[0][0] === EMPTY) {
         this.state[0][0] = COMPUTER;
-      }
-      else {
+      } else {
         this.state[2][2] = COMPUTER;
       }
       return true;
-    }
-    else if (s[2] + s[6] === HUMAN) {
+    } else if (s[2] + s[6] === HUMAN) {
       console.log("play opposite corner");
       if (this.state[0][2] === EMPTY) {
         this.state[0][2] = COMPUTER;
-      }
-      else {
+      } else {
         this.state[2][0] = COMPUTER;
       }
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   _emptyCorner() {
-    const c = [[0, 0], [0, 2], [2, 0], [2, 2]];
-    const e = this._where([0, 2, 6, 8].map(v => this.state.flat()[v]), EMPTY);
+    const c = [
+      [0, 0],
+      [0, 2],
+      [2, 0],
+      [2, 2],
+    ];
+    const e = this._where(
+      [0, 2, 6, 8].map((v) => this.state.flat()[v]),
+      EMPTY
+    );
 
     if (e.length) {
       console.log("play empty corner");
@@ -194,8 +197,7 @@ class Game {
       let i = this._randInt(e.length);
       this.state[c[e[i]][0]][c[e[i]][1]] = COMPUTER;
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -208,12 +210,10 @@ class Game {
       let x = e[this._randInt(e.length)];
       this.state[Math.floor(x / 3)][x % 3] = COMPUTER;
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
-
 
   // helpers
   _randInt(max) {
@@ -236,6 +236,21 @@ class Game {
       [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
+  }
+
+  _checkTriplet(value) {
+    const acc = (x, y) => x + y;
+
+    const rows = this.state.map((v) => v.reduce(acc));
+    const cols = [0, 1, 2].map((j) =>
+      [0, 1, 2].map((i) => this.state[i][j]).reduce(acc)
+    );
+
+    const s = this.state.flat();
+    const diag = [0, 4, 8].map((x) => s[x]).reduce(acc);
+    const sdiag = [6, 4, 2].map((x) => s[x]).reduce(acc);
+
+    return this._where(rows.concat(cols).concat([diag]).concat([sdiag]), value);
   }
 }
 
