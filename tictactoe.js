@@ -68,12 +68,12 @@ class Game {
     return this.gameFinished;
   }
 
-  get getWinner() {
-    return this.winner;
+  get winner() {
+    return this._winner;
   }
 
-  get getWinningLine() {
-    return this.winningLine;
+  get winningLine() {
+    return this._winningLine;
   }
 
   get gameFinished() {
@@ -96,17 +96,17 @@ class Game {
 
     if (check[0].length) {
       console.log("computer wins");
-      this.winner = COMPUTER;
-      this.winningLine = winningLine[check[0][0]];
+      this._winner = COMPUTER;
+      this._winningLine = winningLine[check[0][0]];
       return true;
     } else if (check[1].length) {
       console.log("player wins");
-      this.winner = PLAYER;
-      this.winningLine = winningLine[check[1][0]];
+      this._winner = PLAYER;
+      this._winningLine = winningLine[check[1][0]];
       return true;
     } else if (check[2] && !(check[0].length || check[1].length)) {
       console.log("that's a draw");
-      this.winner = EMPTY;
+      this._winner = EMPTY;
       return true;
     } else {
       return false;
