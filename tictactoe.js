@@ -1,6 +1,6 @@
 // constants
 
-// field values
+// square values
 const EMPTY = 0;
 const PLAYER = 1;
 const COMPUTER = -1;
@@ -26,12 +26,12 @@ class Game {
     }
 
     if (this.state[i][j] !== EMPTY) {
-      throw Error("field not empty!");
+      throw Error("square not empty!");
     }
 
     this.state[i][j] = PLAYER;
-    this.turn = COMPUTER;
     console.log("player move done");
+    this.turn = COMPUTER;
     return this.gameFinished;
   }
 
@@ -39,11 +39,11 @@ class Game {
     if (this.turn !== COMPUTER) {
       throw Error("it's not my turn!");
     }
-    this.turn = PLAYER;
-
+    
     console.log("computer moves");
-
+    
     if (this._randInt(MAX_HANDICAP) < this.handicap) {
+      console.log("you are lucky, I will just play a random square ;)");
       this._randomMove();
     } else {
       let action = [
@@ -55,16 +55,15 @@ class Game {
         () => this._emptyCorner(),
         () => this._randomMove(),
       ];
-
+      
       while (action.length) {
         if (action.shift()()) {
           break;
         }
       }
     }
-
-    console.log(this.state);
-
+    
+    this.turn = PLAYER;
     return this.gameFinished;
   }
 
@@ -173,13 +172,12 @@ class Game {
       COMPUTER
     );
     this._shuffle(rows);
-    console.log(rows);
-
+    
     for (let r = 0; r < rows.length; r++) {
       const i = rows[r];
       const empty = this._where(this.state[i], EMPTY);
       if (empty.length) {
-        console.log("create matchball: find empty field in row");
+        console.log("create matchball: find empty square in row");
         const j = empty[this._randInt(empty.length)];
         this.state[i][j] = COMPUTER;
         return true;
@@ -192,8 +190,6 @@ class Game {
     );
     this._shuffle(cols);
 
-    console.log(cols);
-
     for (let c = 0; c < cols.length; c++) {
       let j = cols[c];
       const empty = this._where(
@@ -201,7 +197,7 @@ class Game {
         EMPTY
       );
       if (empty.length) {
-        console.log("create matchball: find empty field in column");
+        console.log("create matchball: find empty square in column");
         const i = empty[this._randInt(empty.length)];
         this.state[i][j] = COMPUTER;
         return true;
@@ -271,7 +267,7 @@ class Game {
   _randomMove() {
     const e = this._where(this.state.flat(), EMPTY);
     if (e.length) {
-      console.log("play random field");
+      console.log("play random square");
 
       let x = e[this._randInt(e.length)];
       this.state[Math.floor(x / 3)][x % 3] = COMPUTER;
